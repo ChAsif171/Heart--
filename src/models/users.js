@@ -69,14 +69,6 @@ const Schema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    isVerified: {
-        type: Boolean,
-        default: false,
-    },
-    mobileVerified: {
-        type: Boolean,
-        default: false,
-    },
     otp: {
         type: Number,
         default: null,
@@ -85,15 +77,9 @@ const Schema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    role: {
-        type: String,
-        enum: Object.values(RoleTypes),
-        default: RoleTypes.USER,
-        required: true,
-    },
-    isBlocked: {
-        type: Boolean,
-        default: false,
+    otpExpiry: {
+        type: Number,
+        default: null,
     },
 
 },{ timestamps: true });
