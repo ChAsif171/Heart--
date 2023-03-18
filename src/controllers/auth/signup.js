@@ -5,12 +5,9 @@ import { EMAIL_REGEX } from "../../constants/regex.js";
 import CheckIfAllRequiredFieldsArePresent from "../../utils/checkAllRequiredsField.js";
 import checkEmptyFields from "../../utils/checkEmptyFields.js";
 import passwordValidation from "../../utils/passwordValidation.js";
-import sendFinalResponse from "../../utils/sendFinalResponse.js";
 import signJwtToken from "../../utils/signJWT.js";
 import print from "../../utils/print.js";
-import { OtpTypes } from "../../constants/index.js";
 import getAge from "../../utils/getAge.js";
-import chooseEmailTemplateAndMessage from "../../utils/chooseTemplateAndMessage.js";
 import SEND_SANITIZED_SUCCESS_RESPONSE from "../../utils/sendSanitizedSuccessResponse.js";
 import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
 
@@ -19,9 +16,7 @@ const UniqueUser = (users, matchWith) => {
     const errors = { email: "", phoneNumber: "", userDetails: "" };
     if (users.length <= 0) return true;
     users.forEach((user) => {
-        // check if all keys exists in error object
         if (checkEmptyFields(errors)) {
-            // if true then simple return the errors object bcoz all fields are taken and dont continue the loop bcox users mybe in millions
             return errors;
         }
         if (user.email === matchWith.email) {
@@ -39,9 +34,7 @@ const UniqueUser = (users, matchWith) => {
 };
 
 async function SignUp(req, res, next) {
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
-    // const opts = { session };
+
     try {
         const { firstName, lastName, email, dateOfBirth, phoneNumber, password, confirmPassword } = req.body;
         // check empty fields
@@ -52,8 +45,9 @@ async function SignUp(req, res, next) {
 
         // check unique user details
         const currentUserDetails = { email: email.toLowerCase(), phoneNumber, firstName, lastName, dateOfBirth };
-        // const user = await Users.find({ $or: [{ email }, { mobileNumber }], $and: [{ firstName }, { lastName }, { dateOfBirth }] }).select('_id email mobileNumber firstName');
+
         const Query = { $or: [{ $or: [{ email }, { phoneNumber }] }, { $and: [{ firstName: firstName.toLowerCase() }, { lastName: lastName.toLowerCase() }, { dateOfBirth }] }] };
+
         const user = await Users.find(Query).select("_id email phoneNumber firstName lastName dateOfBirth");
         print("users", user);
         const isUnique = UniqueUser(user, currentUserDetails);
@@ -71,6 +65,7 @@ async function SignUp(req, res, next) {
         if (passwordValidation.match(password, confirmPassword) !== true) throw new ApiError("Invalid Details", 400, `${passwordValidation.match(password, confirmPassword).error}`, true);
         if (passwordValidation.length(password) !== true) throw new ApiError("Invalid Details", 400, `${passwordValidation.length(password).error}`, true);
         if (passwordValidation.strength(password) !== true) throw new ApiError("Invalid Details", 400, `${passwordValidation.strength(password).error}`, true);
+
         if (!email.match(EMAIL_REGEX)) {
             throw new ApiError("Invalid Details", 400, "Enter the valid email", true);
         }
@@ -83,23 +78,12 @@ async function SignUp(req, res, next) {
         const token = signJwtToken(newUser._id);
         const sanitizedUser = SEND_SANITIZED_SUCCESS_RESPONSE(newUser);
         sanitizedUser.token = token;
-
-        // send email to user
-        //await SendOtpWithNotification({ user: newUser, otpType: OtpTypes.VerifyEmail, onEmail: true, onMobile: false, templates: chooseEmailTemplateAndMessage("WelcomeAtSignup", false, false) });
-
-
-        // commit and end transaction
-        // await session.commitTransaction();
-        // session.endSession();
-
+        
         print("success", "SignUp transaction completed");
         return sendSuccessResponse(res, 201, true, "User registered successfully.", null, sanitizedUser);
 
     } catch (error) {
-        // if error then abort transaction
-        print("error", "Aborting SignUp transaction");
-        // await session.abortTransaction();
-        // session.endSession();
+        print("error in Signup", error);
         next(error);
     }
 }
