@@ -5,6 +5,7 @@ import print from "../../utils/print.js";
 
 const heart = async (req, res,next) => {
     try {
+        let newUser;
         const { user } = req;
         const { age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal } = req.body;
 
@@ -13,13 +14,15 @@ const heart = async (req, res,next) => {
             console.log(result);
         }
         else {
-            const abiBody = {
+            const apiBody = {
                 email: user.email,
                 age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal,
             }
+            newUser= new hearts(apiBody);
+            await newUser.save();
 
         }
-        return sendSuccessResponse(res, 200, true, "userdata save", "heart Api", req.body);
+        return sendSuccessResponse(res, 200, true, "userdata save", "heart Api", newUser);
 
     } catch (error) {
         print("error in heart", error);
