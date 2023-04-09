@@ -27,7 +27,7 @@ const authMiddleware = (model) => {
             if (user?.isBlocked ?? false) throw new ApiError("Access denied.", 401, "Access denied. Your account has been blocked. Please contact support for more information.", true);
 
             req.user = user;
-            console.log(user);
+            // console.log(user);
             next();
         } catch (error) {
             next(error);
