@@ -20,7 +20,7 @@ async function VerifyOtp(req, res, next) {
             throw new ApiError("Invalid Details", 400, "OTP is expired!", true);
         }
 
-        if (user.otp !== otp) {
+        if (user.otp != otp) {
             throw new ApiError("Invalid Details", 400, "OTP is invalid!", true);
         }
 

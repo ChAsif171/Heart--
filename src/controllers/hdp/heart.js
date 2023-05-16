@@ -2,9 +2,9 @@ import hearts from "../../models/hearts.js";
 import { ApiError } from "../../utils/ApiError.js";
 import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
 import print from "../../utils/print.js";
-import nn from "neural-network-node";
+// import nn from "neural-network-node";
 
-const ds= require("node-dataset.js");
+// const ds= require("node-dataset.js");
 
 const heart = async (req, res,next) => {
     try {
@@ -15,7 +15,7 @@ const heart = async (req, res,next) => {
             email:user.email,
             age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal
         };
-const heartDataSet=await new ds.DataSet().fromFile("./heart.csv","csv");
+// const heartDataSet=await new ds.DataSet().fromFile("./heart.csv","csv");
 
         const result = await hearts.findOne({ email: user.email });
         if (result) {
@@ -28,9 +28,9 @@ const heartDataSet=await new ds.DataSet().fromFile("./heart.csv","csv");
             await newUser.save();
 
         }
-        // return sendSuccessResponse(res, 200, true, " Update User Records", "Heart API", newUser);
+        return sendSuccessResponse(res, 200, true, " Update User Records", "Heart API", newUser);
         
-        return sendSuccessResponse(res, 200, true, " Update User Records", "Heart API", heartDataSet);
+        // return sendSuccessResponse(res, 200, true, " Update User Records", "Heart API", heartDataSet);
 
 
 
