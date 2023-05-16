@@ -54,8 +54,8 @@ async function SignUp(req, res, next) {
 
         // check age > 18
         const age = getAge(dateOfBirth);
-        if (age < 25) {
-            throw new ApiError("Invalid Details", 400, "Age should be greater than 18", true);
+        if (age < 20) {
+            throw new ApiError("Invalid Details", 400, "Age should be greater than 20", true);
         }
 
         if (isUnique !== true) {
