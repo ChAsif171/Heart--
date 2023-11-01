@@ -22,4 +22,13 @@ export default{
         API_SECRET: process.env.SENDGRID_API_KEY,
         FROM: process.env.SENDGRID_FROM_EMAIL,
     },
+    REDIS: {
+        HOST: process.env.REDIS_HOST,
+        PORT: process.env.REDIS_PORT,
+        PASSWORD: process.env.REDIS_PASSWORD,
+        DB: process.env.REDIS_DB,
+    },
+    BULK_SMS: {
+        API_KEY: process.env.BULKSMS_API_KEY,
+    }
 };
