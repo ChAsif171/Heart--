@@ -60,10 +60,10 @@ const Schema = new mongoose.Schema({
         required: [true, "Mobile number is required"],
         unique: true,
         trim: true,
-        validate: {
-            validator: (v) => PHONE_NUMBER_REGEX.test(v),
-            message: (props) => `${props.value} is not a valid mobile number! like +923xxxxxxxxx`,
-        },
+        // validate: {
+        //     validator: (v) => PHONE_NUMBER_REGEX.test(v),
+        //     message: (props) => `${props.value} is not a valid mobile number! like +923xxxxxxxxx`,
+        // },
     },
     emailVerified: {
         type: Boolean,
