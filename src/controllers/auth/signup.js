@@ -5,9 +5,18 @@ import { EMAIL_REGEX } from "../../constants/regex.js";
 import CheckIfAllRequiredFieldsArePresent from "../../utils/checkAllRequiredsField.js";
 import checkEmptyFields from "../../utils/checkEmptyFields.js";
 import passwordValidation from "../../utils/passwordValidation.js";
+<<<<<<< Updated upstream
 import signJwtToken from "../../utils/signJWT.js";
 import print from "../../utils/print.js";
 import getAge from "../../utils/getAge.js";
+=======
+//import sendFinalResponse from "../../utils/sendFinalResponse.js";
+import signJwtToken from "../../utils/signJWT.js";
+import print from "../../utils/print.js";
+//import { OtpTypes } from "../../constants/index.js";
+import getAge from "../../utils/getAge.js";
+//import chooseEmailTemplateAndMessage from "../../utils/chooseTemplateAndMessage.js";
+>>>>>>> Stashed changes
 import SEND_SANITIZED_SUCCESS_RESPONSE from "../../utils/sendSanitizedSuccessResponse.js";
 import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
 
@@ -37,6 +46,7 @@ async function SignUp(req, res, next) {
 
     try {
         const { firstName, lastName, email, dateOfBirth, phoneNumber, password, confirmPassword } = req.body;
+        console.log("in backened",  req.body);
         // check empty fields
         const errors = CheckIfAllRequiredFieldsArePresent(req.body, arrayOfRequiredFields); // returns an object with all the errors
         if (Object.keys(errors).length > 0) {
@@ -54,9 +64,9 @@ async function SignUp(req, res, next) {
 
         // check age > 18
         const age = getAge(dateOfBirth);
-        if (age < 18) {
-            throw new ApiError("Invalid Details", 400, "Age should be greater than 18", true);
-        }
+        // if (age < 20) {
+        //     throw new ApiError("Invalid Details", 400, "Age should be greater than 20", true);
+        // }
 
         if (isUnique !== true) {
             return res.status(400).json(isUnique);
