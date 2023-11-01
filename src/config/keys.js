@@ -7,6 +7,12 @@ export default{
     DATABASE:{
         URL:process.env.MONGODB_URL,
     },
+    REDIS: {
+        HOST: process.env.REDIS_HOST,
+        PORT: process.env.REDIS_PORT,
+        PASSWORD: process.env.REDIS_PASSWORD,
+        DB: process.env.REDIS_DB,
+    },
     JWT: {
         SECRET: process.env.JWT_SECRET,
         TOKEN_EXPIRY: "30d",
