@@ -3,7 +3,7 @@ import brain from "brain.js";
 const predict = async (data) => {
     try {
         const network = new brain.NeuralNetwork();
-       await network.train([
+        network.train([
             { input: [52, 1, 0, 125, 212, 0, 1, 168, 0, 1, 2, 2, 3], output: [0] },
             { input: [53, 1, 0, 140, 203, 1, 0, 155, 1, 3.1, 0, 0, 3], output: [0] },
             { input: [70, 1, 0, 145, 174, 0, 1, 125, 1, 2.6, 0, 0, 3], output: [0] },
@@ -1034,11 +1034,15 @@ const predict = async (data) => {
         const output = network.run([data.age, data.sex, data.cp, data.trestbps, data.chol, data.fbs, data.restecg, data.thalach, data.exang, data.oldpeak, data.slope, data.ca, data.thal]);
         console.log(output);
         console.log(output[0]);
-
-        if (output[0] <= 0.49)
-            return 0;
+        
+        // if (output[0] == NaN) {
+        //     output[0] = 0.39
+        // }
+        if (output[0] <= 0.40)
+            return "0";
         else
-            return 1;
+            return "1";
+        // return output[0]
     } catch (error) {
         console.log(error)
     }
