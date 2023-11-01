@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import { RoleTypes } from "../constants/index.js";
 import { ApiError } from "../utils/ApiError.js";
 import print from "../utils/print.js";
-import { PHONE_NUMBER_REGEX,EMAIL_REGEX,NAME_REGEX,PASSWORD_REGEX } from "../constants/regex.js";
+import { PHONE_NUMBER_REGEX, EMAIL_REGEX, NAME_REGEX } from "../constants/regex.js";
 import passwordValidation from "../utils/passwordValidation.js";
 
 const Schema = new mongoose.Schema({
-    email:{
+    email: {
         type: String,
         required: [true, "Email is required"],
         unique: true,
@@ -42,7 +42,7 @@ const Schema = new mongoose.Schema({
         type: String,
         required: [true, "Date of birth is required"],
         trim: true,
-    }, 
+    },
     password: {
         type: String,
         required: [true, "Password is required"],
@@ -54,23 +54,61 @@ const Schema = new mongoose.Schema({
             message: (props) => `${props.value} is not a valid password!`,
         },
         // select: false,
+
     },
     phoneNumber: {
         type: String,
         required: [true, "Mobile number is required"],
         unique: true,
         trim: true,
+<<<<<<< Updated upstream
         // validate: {
         //     validator: (v) => PHONE_NUMBER_REGEX.test(v),
         //     message: (props) => `${props.value} is not a valid mobile number! like +923xxxxxxxxx`,
         // },
+=======
+        validate: {
+            validator: (v) => PHONE_NUMBER_REGEX.test(v),
+            message: (props) => `${props.value} is not a valid mobile number! like +57xxxxxxxxxx`,
+        },
+>>>>>>> Stashed changes
+    },
+    balance: {
+        type: Number,
+        default: 0,
+        required: true,
+        min: [0, "Balance can't be negative"],
     },
     emailVerified: {
         type: Boolean,
         default: false,
     },
+<<<<<<< Updated upstream
+=======
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    mobileVerified: {
+        type: Boolean,
+        default: false,
+    },
+    kycStatus: {
+        type: Number,
+        default: 0,
+        enum: [0, 1, 2, 3, 4, 5],
+    },
+>>>>>>> Stashed changes
     otp: {
         type: Number,
+        default: null,
+    },
+    otpExpiry: {
+        type: Number,
+        default: null,
+    },
+    otpType: {
+        type: String,
         default: null,
     },
     otpVerified: {
@@ -81,8 +119,33 @@ const Schema = new mongoose.Schema({
         type: Number,
         default: null,
     },
-
-},{ timestamps: true });
+    devices: [
+        {
+            notificationToken: {
+                type: String,
+                default: null,
+            },
+            notificationStatus: {
+                type: Boolean,
+                default: true,
+            },
+            loginStatus: {
+                type: Boolean,
+                default: false,
+            },
+            isMainDevice: {
+                type: Boolean,
+                default: false,
+            },
+            deviceModel: {
+                type: String,
+            },
+            deviceOS: {
+                type: String,
+            },
+        },
+    ],
+}, { timestamps: true });
 
 // schema methods to campare bcrypt passwords
 Schema.methods.bcryptComparePassword = async function (candidatePassword) {
@@ -92,6 +155,12 @@ Schema.methods.bcryptComparePassword = async function (candidatePassword) {
         throw new ApiError("Invalid Details", 500, "Password isn't matching", true);
     }
 };
+
+Schema.statics.sanitize = function () {
+    const { password, createdAt, updatedAt, __v, ...rest } = this.toObject();
+    return rest;
+};
+
 Schema.pre("save", async function (next) {
     try {
         if (this.isModified("password")) {

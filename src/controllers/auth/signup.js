@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import Users from "../../models/users.js";
-import { ApiError } from "../../utils/ApiError.js";
-import { EMAIL_REGEX } from "../../constants/regex.js";
-import CheckIfAllRequiredFieldsArePresent from "../../utils/checkAllRequiredsField.js";
 import checkEmptyFields from "../../utils/checkEmptyFields.js";
 import passwordValidation from "../../utils/passwordValidation.js";
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 import signJwtToken from "../../utils/signJWT.js";
 import print from "../../utils/print.js";
@@ -19,8 +17,19 @@ import getAge from "../../utils/getAge.js";
 >>>>>>> Stashed changes
 import SEND_SANITIZED_SUCCESS_RESPONSE from "../../utils/sendSanitizedSuccessResponse.js";
 import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
+=======
+import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
+import SEND_SANITIZED_SUCCESS_RESPONSE from "../../utils/sendSanitizedSuccessResponse.js";
+import signJwtToken from "../../utils/signJWT.js";
+import print from "../../utils/print.js";
+import SendOtpWithNotification from "../../utils/SendOtpWithNotification.js";
+import chooseEmailTemplateAndMessage from "../../utils/chooseTemplateAndMessage.js";
+import getAge from "../../utils/getAge.js";
+import { ApiError } from "../../utils/ApiError.js";
+import { EMAIL_REGEX } from "../../constants/regex.js";
+import { OtpTypes } from "../../constants/index.js";
+>>>>>>> Stashed changes
 
-const arrayOfRequiredFields = ["firstName", "lastName", "email", "phoneNumber", "password", "confirmPassword", "dateOfBirth"];
 const UniqueUser = (users, matchWith) => {
     const errors = { email: "", phoneNumber: "", userDetails: "" };
     if (users.length <= 0) return true;
@@ -43,6 +52,7 @@ const UniqueUser = (users, matchWith) => {
 };
 
 async function SignUp(req, res, next) {
+<<<<<<< Updated upstream
 
     try {
         const { firstName, lastName, email, dateOfBirth, phoneNumber, password, confirmPassword } = req.body;
@@ -53,6 +63,13 @@ async function SignUp(req, res, next) {
             throw new ApiError("Invalid Details", 400, `Please fill out the required fields : ${Object.keys(errors)} `, true);
         }
 
+=======
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    const opts = { session };
+    try {
+        const { firstName, lastName, email, dateOfBirth, phoneNumber, password, confirmPassword } = req.body;
+>>>>>>> Stashed changes
         // check unique user details
         const currentUserDetails = { email: email.toLowerCase(), phoneNumber, firstName, lastName, dateOfBirth };
 
@@ -71,6 +88,7 @@ async function SignUp(req, res, next) {
         if (isUnique !== true) {
             return res.status(400).json(isUnique);
         }
+
         // check password srength and confirm password
         if (passwordValidation.match(password, confirmPassword) !== true) throw new ApiError("Invalid Details", 400, `${passwordValidation.match(password, confirmPassword).error}`, true);
         if (passwordValidation.length(password) !== true) throw new ApiError("Invalid Details", 400, `${passwordValidation.length(password).error}`, true);
@@ -84,17 +102,35 @@ async function SignUp(req, res, next) {
         if (!newUser) {
             throw new ApiError("Db Error", 400, `User not created `, true);
         }
-        await newUser.save(); // opts -> { session } for transaction
+        await newUser.save(opts); // opts -> { session } for transaction
         const token = signJwtToken(newUser._id);
         const sanitizedUser = SEND_SANITIZED_SUCCESS_RESPONSE(newUser);
         sanitizedUser.token = token;
+<<<<<<< Updated upstream
         
+=======
+
+        // send email to user
+        await SendOtpWithNotification({ user: newUser, otpType: OtpTypes.VerifyEmail, onEmail: true, onMobile: false, templates: chooseEmailTemplateAndMessage("WelcomeAtSignup", false, false) });
+        // commit and end transaction
+        await session.commitTransaction();
+        session.endSession();
+
+>>>>>>> Stashed changes
         print("success", "SignUp transaction completed");
         return sendSuccessResponse(res, 201, true, "User registered successfully.", null, sanitizedUser);
-
     } catch (error) {
+<<<<<<< Updated upstream
         print("error in Signup", error);
+=======
+        // if error then abort transaction
+        print("error", "Aborting SignUp transaction");
+        await session.abortTransaction();
+        session.endSession();
+>>>>>>> Stashed changes
         next(error);
+    } finally {
+        session.endSession();
     }
 }
 
