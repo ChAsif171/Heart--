@@ -5,9 +5,18 @@ import { EMAIL_REGEX } from "../../constants/regex.js";
 import CheckIfAllRequiredFieldsArePresent from "../../utils/checkAllRequiredsField.js";
 import checkEmptyFields from "../../utils/checkEmptyFields.js";
 import passwordValidation from "../../utils/passwordValidation.js";
+<<<<<<< Updated upstream
 import signJwtToken from "../../utils/signJWT.js";
 import print from "../../utils/print.js";
 import getAge from "../../utils/getAge.js";
+=======
+//import sendFinalResponse from "../../utils/sendFinalResponse.js";
+import signJwtToken from "../../utils/signJWT.js";
+import print from "../../utils/print.js";
+//import { OtpTypes } from "../../constants/index.js";
+import getAge from "../../utils/getAge.js";
+//import chooseEmailTemplateAndMessage from "../../utils/chooseTemplateAndMessage.js";
+>>>>>>> Stashed changes
 import SEND_SANITIZED_SUCCESS_RESPONSE from "../../utils/sendSanitizedSuccessResponse.js";
 import sendSuccessResponse from "../../utils/sendSuccessResponse.js";
 

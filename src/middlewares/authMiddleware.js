@@ -1,6 +1,9 @@
 /* eslint-disable require-atomic-updates */
 import { ApiError } from "../utils/ApiError.js";
+<<<<<<< Updated upstream
 import print from "../utils/print.js";
+=======
+>>>>>>> Stashed changes
 import validateToken from "../utils/validateToken.js";
 
 const authMiddleware = (model) => {
@@ -27,7 +30,10 @@ const authMiddleware = (model) => {
             if (user?.isBlocked ?? false) throw new ApiError("Access denied.", 401, "Access denied. Your account has been blocked. Please contact support for more information.", true);
 
             req.user = user;
+<<<<<<< Updated upstream
             // console.log(user);
+=======
+>>>>>>> Stashed changes
             next();
         } catch (error) {
             next(error);
