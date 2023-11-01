@@ -59,7 +59,6 @@ const Schema=new mongoose.Schema({
     },
     results:{
         type:String,
-        trim:true
     }
 });
 const result = mongoose.model("results", Schema);
