@@ -9,7 +9,7 @@ import addMinutesToCurrentDate from "../../utils/addMinutesToCurrentDate.js";
 async function SignIn(req, res, next) {
     try {
         const { email, password } = req.body;
-
+        console.log("in sigin", req.body);
         const userExists = await Users.findOne({ email: email.toLowerCase() });
         if (!userExists) throw new ApiError("Invalid Credentials", 400, "Incorrect Email or password", true);
 
