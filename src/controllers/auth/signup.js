@@ -37,6 +37,7 @@ async function SignUp(req, res, next) {
 
     try {
         const { firstName, lastName, email, dateOfBirth, phoneNumber, password, confirmPassword } = req.body;
+        console.log("in backened",  req.body);
         // check empty fields
         const errors = CheckIfAllRequiredFieldsArePresent(req.body, arrayOfRequiredFields); // returns an object with all the errors
         if (Object.keys(errors).length > 0) {
@@ -54,9 +55,9 @@ async function SignUp(req, res, next) {
 
         // check age > 18
         const age = getAge(dateOfBirth);
-        if (age < 20) {
-            throw new ApiError("Invalid Details", 400, "Age should be greater than 20", true);
-        }
+        // if (age < 20) {
+        //     throw new ApiError("Invalid Details", 400, "Age should be greater than 20", true);
+        // }
 
         if (isUnique !== true) {
             return res.status(400).json(isUnique);
